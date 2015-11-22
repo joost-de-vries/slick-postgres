@@ -5,6 +5,7 @@ target
 /project/activator-*
 /logs/
 /RUNNING_PID
+CONTID
 *.iml
 .DS_Store
 .sbtserver*

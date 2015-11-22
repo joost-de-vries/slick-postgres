@@ -2,11 +2,13 @@ import scala.concurrent.{Future, Await}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import slick.backend.DatabasePublisher
-import slick.driver.H2Driver.api._
+
+import MyPostgresDriver.api._
+//import slick.driver.H2Driver.api._
 
 // The main application
 object HelloSlick extends App {
-  val db = Database.forConfig("h2mem1")
+  val db = Database.forConfig("postgres")
   try {
 
     // The query interface for the Suppliers table
@@ -21,9 +23,9 @@ object HelloSlick extends App {
       (suppliers.schema ++ coffees.schema).create,
 
       // Insert some suppliers
-      suppliers += (101, "Acme, Inc.", "99 Market Street", "Groundsville", "CA", "95199"),
-      suppliers += ( 49, "Superior Coffee", "1 Party Place", "Mendocino", "CA", "95460"),
-      suppliers += (150, "The High Ground", "100 Coffee Lane", "Meadows", "CA", "93966")
+      suppliers += ((101, "Acme, Inc.", "99 Market Street", "Groundsville", "CA", "95199")),
+      suppliers += (( 49, "Superior Coffee", "1 Party Place", "Mendocino", "CA", "95460")),
+      suppliers += ((150, "The High Ground", "100 Coffee Lane", "Meadows", "CA", "93966"))
     )
 
     val setupFuture: Future[Unit] = db.run(setupAction)
