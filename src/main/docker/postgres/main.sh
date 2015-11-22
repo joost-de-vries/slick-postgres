@@ -19,6 +19,6 @@ do
 done
 
 # Prep the DB, create user and database
-${thisDir}/../../test/scripts/writeDataToDb.sh DEV
+#${thisDir}/../../test/scripts/writeDataToDb.sh DEV
 
 echo "postgres ready"
