@@ -15,7 +15,7 @@ initialize := {
   assert(current == required, s"Unsupported JDK: java.specification.version $current != $required")
 }
 
-mainClass in Compile := Some("HelloSlick")
+mainClass in Compile := Some("Run")
 
 libraryDependencies ++= List(
   "com.typesafe.slick" %% "slick" % "3.1.0",
