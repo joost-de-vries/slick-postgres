@@ -1,6 +1,7 @@
 import MyPostgresDriver.api._
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
+
 //import slick.driver.H2Driver.api._
 
 object TrySlick extends App {
