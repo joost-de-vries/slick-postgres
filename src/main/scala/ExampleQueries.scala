@@ -1,4 +1,5 @@
 import MyPostgresDriver.api._
+import slick.backend.DatabasePublisher
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
@@ -62,13 +63,16 @@ object ExampleQueries extends App {
   val combinedAction: DBIO[Seq[Suppliers.Row]] =
     insertAndPrintAction >> getAllSuppliersAction
 
+  val coffeeNamesAction: StreamingDBIO[Seq[String], String] =
+    coffees.map(_.name).result
+
+
   try {
 
-    val f = db.run(combinedAction)
+    val coffeeNamesPublisher: DatabasePublisher[String] =
+      db.stream(coffeeNamesAction)
 
-    f.map { allSuppliers : Seq[Suppliers.Row] =>
-      allSuppliers.foreach(println)
-    }
+    val f= coffeeNamesPublisher.foreach(println)
 
     Await.result(f, Duration.Inf)
 
