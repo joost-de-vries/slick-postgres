@@ -6,8 +6,7 @@ import scala.concurrent.{Await, Future}
 
 //import slick.driver.H2Driver.api._
 
-object ExampleQueries extends App {
-  val db = Database.forConfig("postgres")
+object Actions{
 
   // The query interface for the Suppliers table
   val suppliers: TableQuery[Suppliers] = TableQuery[Suppliers]
@@ -61,6 +60,23 @@ object ExampleQueries extends App {
 
   val combinedAction: DBIO[Seq[Suppliers.Row]] =
     insertAndPrintAction >> getAllSuppliersAction
+
+  def withDb[A](action: DBIO[A]):A = {
+    val db = Database.forConfig("postgres")
+    try {
+
+      val f = db.run(action)
+
+      Await.result(f, Duration.Inf)
+
+    } finally db.close
+  }
+}
+
+object Run extends App {
+  import Actions.combinedAction
+
+  val db = Database.forConfig("postgres")
 
   try {
 
