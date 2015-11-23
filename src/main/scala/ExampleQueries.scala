@@ -50,9 +50,25 @@ object ExampleQueries extends App {
     )
   }
 
+  val insertAndPrintAction: DBIO[Unit] = insertCoffees.map { coffeesInsertResult =>
+    // Print the number of rows inserted
+    coffeesInsertResult foreach { numRows =>
+      println(s"Inserted $numRows rows into the Coffees table")
+    }
+  }
+
+  val getAllSuppliersAction: DBIO[Seq[Suppliers.Row]] = suppliers.result
+
+  val combinedAction: DBIO[Seq[Suppliers.Row]] =
+    insertAndPrintAction >> getAllSuppliersAction
+
   try {
 
-    val f = db.run(dropDb)
+    val f = db.run(combinedAction)
+
+    f.map { allSuppliers : Seq[Suppliers.Row] =>
+      allSuppliers.foreach(println)
+    }
 
     Await.result(f, Duration.Inf)
 
