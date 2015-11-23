@@ -21,15 +21,15 @@ object ExampleQueries extends App {
 
 
   val getSuppliersAboveLimit: DBIO[Seq[String]] = {
-    (for {c <- coffees if c.price < 10.0} yield c.name).result
+    (for {c <- coffees if c.price < 10.0f} yield c.name).result
   }
 
   val getCoffeeNames = coffees.map(_.name)
 
-  val getSortedLowPricedCoffeeNames = coffees.filter(x => x.price < 10.0).sortBy(_.name).map(_.name)
+  val getSortedLowPricedCoffeeNames = coffees.filter(x => x.price < 10.0f).sortBy(_.name).map(_.name)
 
   val plainSqlQuery = {
-    val limit = 10.0
+    val limit = 10.0f
 
     sql"select COF_NAME from COFFEES where PRICE < $limit".as[String]
   }
