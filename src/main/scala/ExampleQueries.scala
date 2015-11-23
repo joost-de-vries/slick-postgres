@@ -64,7 +64,7 @@ object Actions {
   val coffeeNamesAction: StreamingDBIO[Seq[String], String] =
     coffees.map(_.name).result
 
-  def withDb[A](action: DBIO[A]):A = {
+  def withDb[A](action: DBIO[A]): A = {
     val db = Database.forConfig("postgres")
     try {
 
@@ -74,23 +74,25 @@ object Actions {
 
     } finally db.close
   }
+}
 
-  object Run extends App {
+object Run extends App {
 
+  import Actions.coffeeNamesAction
 
-    val db = Database.forConfig("postgres")
+  val db = Database.forConfig("postgres")
 
-    try {
+  try {
 
-      val coffeeNamesPublisher: DatabasePublisher[String] =
-        db.stream(coffeeNamesAction)
+    val coffeeNamesPublisher: DatabasePublisher[String] =
+      db.stream(coffeeNamesAction)
 
-      val f = coffeeNamesPublisher.foreach(println)
+    val f = coffeeNamesPublisher.foreach(println)
 
-      Await.result(f, Duration.Inf)
+    Await.result(f, Duration.Inf)
 
-    } finally db.close
-
-  }
+  } finally db.close
 
 }
+
+
