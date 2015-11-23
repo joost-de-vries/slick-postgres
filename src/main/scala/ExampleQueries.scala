@@ -7,10 +7,7 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 
 //import slick.driver.H2Driver.api._
-
-object ExampleQueries extends App {
-  val db = Database.forConfig("postgres")
-
+object Actions {
   // The query interface for the Suppliers table
   val suppliers: TableQuery[Suppliers] = TableQuery[Suppliers]
 
@@ -67,6 +64,12 @@ object ExampleQueries extends App {
   val coffeeNamesAction: StreamingDBIO[Seq[String], String] =
     coffees.map(_.name).result
 
+}
+
+object Run extends App {
+  import Actions._
+
+  val db = Database.forConfig("postgres")
 
   try {
 
