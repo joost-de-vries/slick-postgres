@@ -6,3 +6,5 @@ Make sure to change the ip number in `postgres.url` in `src/main/resources/appli
 
 Run `startDb.sh` to start or reset the Postgres db.
 
+You can find the slides under 'releases'.
+
