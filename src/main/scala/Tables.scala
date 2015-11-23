@@ -1,5 +1,5 @@
 import slick.driver.H2Driver.api._
-import slick.lifted.{ProvenShape, ForeignKeyQuery}
+import slick.lifted.{CanBeQueryCondition, ProvenShape, ForeignKeyQuery}
 
 // A Suppliers table with 6 columns: id, name, street, city, state, zip
 class Suppliers(tag: Tag)
@@ -12,26 +12,34 @@ class Suppliers(tag: Tag)
   def city: Rep[String] = column[String]("CITY")
   def state: Rep[String] = column[String]("STATE")
   def zip: Rep[String] = column[String]("ZIP")
-  
+
   // Every table needs a * projection with the same type as the table's type parameter
   def * : ProvenShape[(Int, String, String, String, String, String)] =
     (id, name, street, city, state, zip)
 }
 
+object Suppliers{
+  type Row = (Int, String, String, String, String, String)
+}
+
 // A Coffees table with 5 columns: name, supplier id, price, sales, total
 class Coffees(tag: Tag)
-  extends Table[(String, Int, Double, Int, Int)](tag, "COFFEES") {
+  extends Table[(String, Int, Float, Int, Int)](tag, "COFFEES") {
 
   def name: Rep[String] = column[String]("COF_NAME", O.PrimaryKey)
   def supID: Rep[Int] = column[Int]("SUP_ID")
-  def price: Rep[Double] = column[Double]("PRICE")
+  def price: Rep[Float] = column[Float]("PRICE")
   def sales: Rep[Int] = column[Int]("SALES")
   def total: Rep[Int] = column[Int]("TOTAL")
-  
-  def * : ProvenShape[(String, Int, Double, Int, Int)] =
+
+  def * : ProvenShape[(String, Int, Float, Int, Int)] =
     (name, supID, price, sales, total)
-  
+
   // A reified foreign key relation that can be navigated to create a join
-  def supplier: ForeignKeyQuery[Suppliers, (Int, String, String, String, String, String)] = 
+  def supplier: ForeignKeyQuery[Suppliers, (Int, String, String, String, String, String)] =
     foreignKey("SUP_FK", supID, TableQuery[Suppliers])(_.id)
+}
+
+object Coffees {
+  type Row = (String, Int, Float, Int, Int)
 }

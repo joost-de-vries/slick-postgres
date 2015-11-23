@@ -1,7 +1,4 @@
 import MyPostgresDriver.api._
-import slick.backend.DatabasePublisher
-
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 //import slick.driver.H2Driver.api._
