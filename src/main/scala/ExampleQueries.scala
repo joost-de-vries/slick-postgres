@@ -40,11 +40,11 @@ object Actions {
   )
 
   val insertCoffees = {
-    coffees ++= Seq (
-      ("Colombian",         101, 7.99f, 0, 0),
-      ("French_Roast",       49, 8.99f, 0, 0),
-      ("Espresso",          150, 9.99f, 0, 0),
-      ("Colombian_Decaf",   101, 8.99f, 0, 0),
+    coffees ++= Seq(
+      ("Colombian", 101, 7.99f, 0, 0),
+      ("French_Roast", 49, 8.99f, 0, 0),
+      ("Espresso", 150, 9.99f, 0, 0),
+      ("Colombian_Decaf", 101, 8.99f, 0, 0),
       ("French_Roast_Decaf", 49, 9.99f, 0, 0)
     )
   }
@@ -64,22 +64,33 @@ object Actions {
   val coffeeNamesAction: StreamingDBIO[Seq[String], String] =
     coffees.map(_.name).result
 
-}
+  def withDb[A](action: DBIO[A]):A = {
+    val db = Database.forConfig("postgres")
+    try {
 
-object Run extends App {
-  import Actions._
+      val f = db.run(action)
 
-  val db = Database.forConfig("postgres")
+      Await.result(f, Duration.Inf)
 
-  try {
+    } finally db.close
+  }
 
-    val coffeeNamesPublisher: DatabasePublisher[String] =
-      db.stream(coffeeNamesAction)
+  object Run extends App {
 
-    val f= coffeeNamesPublisher.foreach(println)
 
-    Await.result(f, Duration.Inf)
+    val db = Database.forConfig("postgres")
 
-  } finally db.close
+    try {
+
+      val coffeeNamesPublisher: DatabasePublisher[String] =
+        db.stream(coffeeNamesAction)
+
+      val f = coffeeNamesPublisher.foreach(println)
+
+      Await.result(f, Duration.Inf)
+
+    } finally db.close
+
+  }
 
 }
