@@ -12,4 +12,7 @@ CONTID
 
 .project
 .classpath
+.settings
+.cache-main
+.cache-tests
 /bin/
