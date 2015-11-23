@@ -21,12 +21,12 @@ object ExampleQueries extends App {
 
 
   val getSuppliersAboveLimit: DBIO[Seq[String]] = {
-    (for {c <- coffees if c.price < 10.0} yield c.name).result
+    (for {c <- coffees if c.price < 10.0f} yield c.name).result
   }
 
   val getCoffeeNames = coffees.map(_.name)
 
-  val getSortedLowPricedCoffeeNames = coffees.filter(x => x.price < 10.0).sortBy(_.name).map(_.name)
+  val getSortedLowPricedCoffeeNames = coffees.filter(x => x.price < 10.0f).sortBy(_.name).map(_.name)
 
   val plainSqlQuery = {
     val limit = 10.0
@@ -34,19 +34,19 @@ object ExampleQueries extends App {
     sql"select COF_NAME from COFFEES where PRICE < $limit".as[String]
   }
 
-  val insertSuppliers: DBIO[Int] = {
+  val insertSuppliers: DBIO[Unit] = DBIO.seq(
     suppliers += ((101, "Acme, Inc.", "99 Market Street", "Groundsville", "CA", "95199")),
     suppliers += ((49, "Superior Coffee", "1 Party Place", "Mendocino", "CA", "95460")),
     suppliers += ((150, "The High Ground", "100 Coffee Lane", "Meadows", "CA", "93966"))
-  }
+  )
 
   val insertCoffees = {
     coffees ++= Seq (
-      ("Colombian",         101, 7.99, 0, 0),
-      ("French_Roast",       49, 8.99, 0, 0),
-      ("Espresso",          150, 9.99, 0, 0),
-      ("Colombian_Decaf",   101, 8.99, 0, 0),
-      ("French_Roast_Decaf", 49, 9.99, 0, 0)
+      ("Colombian",         101, 7.99f, 0, 0),
+      ("French_Roast",       49, 8.99f, 0, 0),
+      ("Espresso",          150, 9.99f, 0, 0),
+      ("Colombian_Decaf",   101, 8.99f, 0, 0),
+      ("French_Roast_Decaf", 49, 9.99f, 0, 0)
     )
   }
 

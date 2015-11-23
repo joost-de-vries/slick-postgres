@@ -38,14 +38,8 @@ class Coffees(tag: Tag)
   // A reified foreign key relation that can be navigated to create a join
   def supplier: ForeignKeyQuery[Suppliers, (Int, String, String, String, String, String)] =
     foreignKey("SUP_FK", supID, TableQuery[Suppliers])(_.id)
-
-  def withComplexFilter: Boolean =  (price < 10.0).
 }
 
 object Coffees {
   type Row = (String, Int, Double, Int, Int)
-}
-
-object Coffees {
-  type Row = (String, Int, Float, Int, Int)
 }
