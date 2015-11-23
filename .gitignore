@@ -9,3 +9,7 @@ CONTID
 *.iml
 .DS_Store
 .sbtserver*
+
+.project
+.classpath
+/bin/
