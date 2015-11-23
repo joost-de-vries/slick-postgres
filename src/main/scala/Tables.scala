@@ -1,5 +1,5 @@
 import slick.driver.H2Driver.api._
-import slick.lifted.{ProvenShape, ForeignKeyQuery}
+import slick.lifted.{CanBeQueryCondition, ProvenShape, ForeignKeyQuery}
 
 // A Suppliers table with 6 columns: id, name, street, city, state, zip
 class Suppliers(tag: Tag)
@@ -18,6 +18,10 @@ class Suppliers(tag: Tag)
     (id, name, street, city, state, zip)
 }
 
+object Suppliers{
+  type Row = (Int, String, String, String, String, String)
+}
+
 // A Coffees table with 5 columns: name, supplier id, price, sales, total
 class Coffees(tag: Tag)
   extends Table[(String, Int, Double, Int, Int)](tag, "COFFEES") {
@@ -34,4 +38,10 @@ class Coffees(tag: Tag)
   // A reified foreign key relation that can be navigated to create a join
   def supplier: ForeignKeyQuery[Suppliers, (Int, String, String, String, String, String)] = 
     foreignKey("SUP_FK", supID, TableQuery[Suppliers])(_.id)
+
+  def withComplexFilter: Boolean =  (price < 10.0).
+}
+
+object Coffees {
+  type Row = (String, Int, Double, Int, Int)
 }
