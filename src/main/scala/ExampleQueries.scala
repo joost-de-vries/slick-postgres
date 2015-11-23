@@ -34,6 +34,22 @@ object ExampleQueries extends App {
     sql"select COF_NAME from COFFEES where PRICE < $limit".as[String]
   }
 
+  val insertSuppliers: DBIO[Int] = {
+    suppliers += ((101, "Acme, Inc.", "99 Market Street", "Groundsville", "CA", "95199")),
+    suppliers += ((49, "Superior Coffee", "1 Party Place", "Mendocino", "CA", "95460")),
+    suppliers += ((150, "The High Ground", "100 Coffee Lane", "Meadows", "CA", "93966"))
+  }
+
+  val insertCoffees = {
+    coffees ++= Seq (
+      ("Colombian",         101, 7.99, 0, 0),
+      ("French_Roast",       49, 8.99, 0, 0),
+      ("Espresso",          150, 9.99, 0, 0),
+      ("Colombian_Decaf",   101, 8.99, 0, 0),
+      ("French_Roast_Decaf", 49, 9.99, 0, 0)
+    )
+  }
+
   try {
 
     val f = db.run(dropDb)
